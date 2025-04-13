@@ -1,0 +1,24 @@
+{
+  "name": "npm-standard-versioning",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Messing around with npm package standard-version",
+  "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --format=esm --target=es2020 --outfile=dist/index.js",
+    "start": "node dist/index.js",
+    "release": "standard-version"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "hono": "^4.7.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "esbuild": "^0.25.2",
+    "standard-version": "^9.5.0",
+    "tsx": "^4.19.3"
+  }
+}
