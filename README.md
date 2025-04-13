@@ -15,6 +15,13 @@ npm install
 ```
 
 
+## Github Prereqs
+1. Create 3 Github issue labels: `major`, `minor`, & `patch`
+2. Allow Github bot write permissions: (settings > Actions > General > Workflow permissions > check `Read and write permissions` & `Allow GitHub Actions to create and approve pull requests`)
+3. Add Docker PAT To Github Actions secrets: (settings > Secrets and variables > Actions > add `DOCKER_HUB_USERNAME` & `DOCKER_HUB_PASSWORD`)
+
+
+
 ## Github Repo
 ### Issues and Labels
 
