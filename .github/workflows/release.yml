@@ -40,23 +40,26 @@ jobs:
           echo "RELEASE_TYPE=${RELEASE_TYPE}" >> $GITHUB_OUTPUT
       
       - name: Release with standard-version
+        id: release
         run: |
-          npm run release -- --release-as ${{ steps.release-type.outputs.RELEASE_TYPE }} --no-verify
-      
-      - name: Get new version
-        id: version
-        run: |
-          NEW_VERSION=$(node -e "console.log(require('./package.json').version)")
+          # Capture the output from standard-version
+          OUTPUT=$(npm run release -- --release-as ${{ steps.release-type.outputs.RELEASE_TYPE }} --no-verify --dry-run)
+          echo "$OUTPUT"
+          
+          # Extract the new version from the output
+          NEW_VERSION=$(echo "$OUTPUT" | grep -oP 'tagging release v\K[0-9]+\.[0-9]+\.[0-9]+')
           echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
-      
-      - name: Extract changelog for the current version
-        id: changelog
-        run: |
-          VERSION=${{ steps.version.outputs.NEW_VERSION }}
-          # Extract the content between the current version header and the next version header
-          CHANGELOG_CONTENT=$(awk -v version="## \\[$VERSION\\]" 'BEGIN {print_line=0} $0 ~ version {print_line=1; next} $0 ~ /^## / {if(print_line==1) {print_line=0}} print_line' CHANGELOG.md)
-          # Escape newlines for GitHub Actions using printf
-          printf "CONTENT<<EOF\n%s\nEOF\n" "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          
+          # Create a new file with just the release notes for this version
+          if [[ -n "$NEW_VERSION" ]]; then
+            # Get the section between the version line and the commit line
+            CHANGELOG_CONTENT=$(sed -n "/## \[$NEW_VERSION\]/,/^### /p" CHANGELOG.md | sed '$d')
+            echo "$CHANGELOG_CONTENT" > release-notes.md
+            echo "CHANGELOG_FILE=release-notes.md" >> $GITHUB_OUTPUT
+          fi
+          
+          # Now run the actual command (not dry run)
+          npm run release -- --release-as ${{ steps.release-type.outputs.RELEASE_TYPE }} --no-verify
       
       - name: Push changes
         run: |
@@ -68,8 +71,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.version.outputs.NEW_VERSION }}
-          release_name: Release v${{ steps.version.outputs.NEW_VERSION }}
-          body: ${{ steps.changelog.outputs.CONTENT }}
+          tag_name: v${{ steps.release.outputs.NEW_VERSION }}
+          release_name: Release v${{ steps.release.outputs.NEW_VERSION }}
+          body_path: release-notes.md
           draft: false
           prerelease: false
