@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/philopian/npm-standard-versioning/compare/v0.0.3...v0.0.4) (2025-04-13)
+
+
+### Bug Fixes
+
+* exclude CHANGELOG.md from .gitignore ([bc727eb](https://github.com/philopian/npm-standard-versioning/commit/bc727eb428c3f461d2a5a312acf3dec6042794d8))
+
 ### [0.0.3](https://github.com/philopian/npm-standard-versioning/compare/v0.0.2...v0.0.3) (2025-04-13)
 
 
