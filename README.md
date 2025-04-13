@@ -15,25 +15,27 @@ npm install
 ```
 
 
-## Usage
+## Github Repo
+### Issues and Labels
 
-### Bumping Version
+To streamline the release process, create the following labels in your repository's "Issues" tab under "Labels":
 
-Run the following command to bump the version and generate a changelog:
+- **major**: For breaking changes.
+- **minor**: For new features.
+- **patch**: For bug fixes (default).
 
-```bash
-$ npm run release patch
-$ npm run release minor
-$ npm run release major
-```
+<img src="assets/screenshot-github-issues-labels.jpg" alt="GitHub Issues Labels" width="600px">
 
-### Publishing
 
-After bumping the version, push the changes and publish the package:
+### How It Works
 
-```bash
-$ git push --follow-tags origin main
-```
+1. When a pull request (PR) is created, add one of the labels (`major`, `minor`, or `patch`) to indicate the type of change.
+2. When the PR is merged into the `main` branch, the workflow will:
+  - Determine the release type from the PR label.
+  - Run `standard-version` with the appropriate release type.
+  - Commit the version bump and changelog update.
+  - Push the tag and changes back to the `main` branch.
+3. The existing `release.yml` workflow will then create a GitHub Release based on this tag.
 
 
 
