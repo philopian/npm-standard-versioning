@@ -8,7 +8,7 @@ app.get("/", (c) => {
 });
 
 app.get("/hello", (c) => {
-  return c.text("Hello Standard Versioning!");
+  return c.text("Hello!");
 });
 
 serve(
