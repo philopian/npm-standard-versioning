@@ -6,7 +6,7 @@ on:
     types: 
       - released
   workflow_run:
-    workflows: ["Release"]
+    workflows: ["Auto Release"]  # Updated to match the exact name of your release workflow
     types:
       - completed
 
