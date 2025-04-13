@@ -11,6 +11,10 @@ app.get("/hello", (c) => {
   return c.text("Hello!");
 });
 
+app.get("/something", (c) => {
+  return c.text("somthing!");
+});
+
 serve(
   {
     fetch: app.fetch,
