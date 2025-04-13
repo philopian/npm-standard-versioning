@@ -5,6 +5,10 @@ on:
   release:
     types: 
       - released
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
 
 env:
   DOCKER_IMAGE_NAME: pdotwdot/npm-standard-versioning  
