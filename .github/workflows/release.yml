@@ -32,9 +32,9 @@ jobs:
         id: release-type
         run: |
           RELEASE_TYPE="patch"  # Default
-          if ${{ contains(github.event.pull_request.labels.*.name, 'major') }}; then
+          if echo "${{ toJson(github.event.pull_request.labels) }}" | grep -q '"major"'; then
             RELEASE_TYPE="major"
-          elif ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}; then
+          elif echo "${{ toJson(github.event.pull_request.labels) }}" | grep -q '"minor"'; then
             RELEASE_TYPE="minor"
           fi
           echo "RELEASE_TYPE=${RELEASE_TYPE}" >> $GITHUB_OUTPUT
@@ -42,25 +42,19 @@ jobs:
       - name: Release with standard-version
         id: release
         run: |
-          # Capture the output from standard-version
-          OUTPUT=$(npm run release -- --release-as ${{ steps.release-type.outputs.RELEASE_TYPE }} --no-verify --dry-run)
-          echo "$OUTPUT"
+          # Run the actual release command to update the changelog and create the tag
+          npm run release -- --release-as ${{ steps.release-type.outputs.RELEASE_TYPE }} --no-verify
           
-          # Extract the new version from the output
-          NEW_VERSION=$(echo "$OUTPUT" | grep -oP 'tagging release v\K[0-9]+\.[0-9]+\.[0-9]+')
-          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
-          
-          # Create a new file with just the release notes for this version
+      - name: Generate release notes
+        run: |
+          NEW_VERSION=$(node -p "require('./package.json').version")
           if [[ -n "$NEW_VERSION" ]]; then
-            # Get the section between the version line and the commit line
-            CHANGELOG_CONTENT=$(sed -n "/## \[$NEW_VERSION\]/,/^### /p" CHANGELOG.md | sed '$d')
+            CHANGELOG_CONTENT=$(sed -n "/## \[$NEW_VERSION\]/,/^## /p" CHANGELOG.md | sed '$d')
             echo "$CHANGELOG_CONTENT" > release-notes.md
             echo "CHANGELOG_FILE=release-notes.md" >> $GITHUB_OUTPUT
           fi
-          
-          # Now run the actual command (not dry run)
-          npm run release -- --release-as ${{ steps.release-type.outputs.RELEASE_TYPE }} --no-verify
-      
+
+
       - name: Push changes
         run: |
           git push --follow-tags origin main
