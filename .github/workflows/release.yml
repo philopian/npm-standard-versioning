@@ -46,14 +46,15 @@ jobs:
           npm run release -- --release-as ${{ steps.release-type.outputs.RELEASE_TYPE }} --no-verify
           
       - name: Generate release notes
+        id: generate-notes
         run: |
           NEW_VERSION=$(node -p "require('./package.json').version")
           if [[ -n "$NEW_VERSION" ]]; then
             CHANGELOG_CONTENT=$(sed -n "/## \[$NEW_VERSION\]/,/^## /p" CHANGELOG.md | sed '$d')
             echo "$CHANGELOG_CONTENT" > release-notes.md
-            echo "CHANGELOG_FILE=release-notes.md" >> $GITHUB_OUTPUT
+            echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
+            echo "CHANGELOG_CONTENT=${CHANGELOG_CONTENT}" >> $GITHUB_OUTPUT
           fi
-
 
       - name: Push changes
         run: |
@@ -62,11 +63,10 @@ jobs:
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.release.outputs.NEW_VERSION }}
-          release_name: Release v${{ steps.release.outputs.NEW_VERSION }}
+          tag_name: v${{ steps.generate-notes.outputs.NEW_VERSION }}
+          release_name: Release v${{ steps.generate-notes.outputs.NEW_VERSION }}
+          body: ${{ steps.generate-notes.outputs.CHANGELOG_CONTENT }}
           body_path: release-notes.md
           draft: false
           prerelease: false
