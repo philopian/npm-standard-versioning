@@ -1,0 +1,56 @@
+name: Auto Release
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      
+      - name: Get release type from labels
+        id: get-release-type
+        run: |
+          RELEASE_TYPE="patch"  # Default
+          if ${{ contains(github.event.pull_request.labels.*.name, 'major') }}; then
+            RELEASE_TYPE="major"
+          elif ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}; then
+            RELEASE_TYPE="minor"
+          fi
+          echo "RELEASE_TYPE=$RELEASE_TYPE" >> $GITHUB_ENV
+          echo "::set-output name=release_type::$RELEASE_TYPE"
+      
+      - name: Release with standard-version
+        run: |
+          npm run release -- --release-as ${{ env.RELEASE_TYPE }} --no-verify
+      
+      - name: Get new version
+        id: get-version
+        run: |
+          NEW_VERSION=$(node -e "console.log(require('./package.json').version)")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "::set-output name=version::$NEW_VERSION"
+      
+      - name: Push changes
+        run: |
+          git push --follow-tags origin main

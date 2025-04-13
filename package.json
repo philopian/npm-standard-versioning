@@ -16,6 +16,8 @@
     "hono": "^4.7.6"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/github": "^11.0.1",
     "@types/node": "^22.14.1",
     "esbuild": "^0.25.2",
     "standard-version": "^9.5.0",
