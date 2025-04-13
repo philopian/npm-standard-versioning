@@ -1,0 +1,12 @@
+node_modules
+.DS_Store
+.env
+*.log
+*.tmp
+*.cache
+*.sublime-workspace
+*.sublime-project
+.idea
+*.swp
+*.bak
+*.orig    
