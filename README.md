@@ -2,6 +2,7 @@
 
 A project demonstrating the use of `standard-version` for semantic versioning and changelog generation in Node.js projects.
 
+
 ## Features
 
 - Automated version bumping based on commit messages.
@@ -15,7 +16,6 @@ A project demonstrating the use of `standard-version` for semantic versioning an
 ```bash
 npm install
 ```
-
 
 
 ## Github Prereqs
