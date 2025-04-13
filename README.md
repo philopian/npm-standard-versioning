@@ -22,7 +22,9 @@ npm install
 Run the following command to bump the version and generate a changelog:
 
 ```bash
-npx standard-version
+$ npm run release patch
+$ npm run release minor
+$ npm run release major
 ```
 
 ### Publishing
@@ -30,8 +32,7 @@ npx standard-version
 After bumping the version, push the changes and publish the package:
 
 ```bash
-git push --follow-tags origin main
-npm publish
+$ git push --follow-tags origin main
 ```
 
 
