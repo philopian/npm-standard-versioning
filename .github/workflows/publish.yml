@@ -1,10 +1,10 @@
 name: Build and Push Docker Image
 
 on:
+  workflow_dispatch:  # Allow manual triggering
   release:
     types: 
-      - created
-      - published
+      - released
 
 env:
   DOCKER_IMAGE_NAME: pdotwdot/npm-standard-versioning  
