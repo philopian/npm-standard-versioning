@@ -2,8 +2,9 @@ name: Build and Push Docker Image
 
 on:
   release:
-    types:
-      - published  # Trigger when a release is published
+    types: 
+      - created
+      - published
 
 env:
   DOCKER_IMAGE_NAME: pdotwdot/npm-standard-versioning  
