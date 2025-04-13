@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   release:
     types:
-      - created  # Trigger only when a new release is created
+      - published  # Trigger when a release is published
 
 env:
   DOCKER_IMAGE_NAME: pdotwdot/npm-standard-versioning  
@@ -17,7 +17,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Setup Node.js version 20
+    # Setup Node.js version 22
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -25,10 +25,10 @@ jobs:
 
     # Extract version from package.json
     - name: Extract version from package.json
-      id: get_version
+      id: version
       run: |
         VERSION=$(jq -r '.version' package.json)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
 
     # Set up QEMU for multi-platform builds
     - name: Set up QEMU
@@ -49,22 +49,22 @@ jobs:
     - name: Check if Docker image exists
       id: check_image
       run: |
-        IMAGE_EXISTS=$(docker manifest inspect ${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }} > /dev/null 2>&1 && echo "true" || echo "false")
-        echo "IMAGE_EXISTS=$IMAGE_EXISTS" >> $GITHUB_ENV
+        IMAGE_EXISTS=$(docker manifest inspect ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.version.outputs.VERSION }} > /dev/null 2>&1 && echo "true" || echo "false")
+        echo "EXISTS=${IMAGE_EXISTS}" >> $GITHUB_OUTPUT
 
     # Build and push Docker image if it doesn't exist
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
-      if: env.IMAGE_EXISTS == 'false'
+      if: steps.check_image.outputs.EXISTS == 'false'
       with:
         context: .
         platforms: "linux/amd64,linux/arm64"
         push: true
         tags: |
-          ${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }}
+          ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
           ${{ env.DOCKER_IMAGE_NAME }}:latest
 
     # Skip the build if the image already exists
     - name: Skip Build
-      if: env.IMAGE_EXISTS == 'true'
-      run: echo "Docker image with version ${{ env.VERSION }} already exists. Skipping build."
+      if: steps.check_image.outputs.EXISTS == 'true'
+      run: echo "Docker image with version ${{ steps.version.outputs.VERSION }} already exists. Skipping build."
