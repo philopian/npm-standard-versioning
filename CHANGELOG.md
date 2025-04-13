@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/philopian/npm-standard-versioning/compare/v0.2.4...v0.3.0) (2025-04-13)
+
+
+### Bug Fixes
+
+* add dockerfile space ([39ea0d2](https://github.com/philopian/npm-standard-versioning/commit/39ea0d24485b35b1cfe93f586c89c35aad098be3))
+
 ### [0.2.4](https://github.com/philopian/npm-standard-versioning/compare/v0.2.3...v0.2.4) (2025-04-13)
 
 
