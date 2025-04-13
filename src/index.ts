@@ -7,6 +7,10 @@ app.get("/", (c) => {
   return c.text("Hello Standard Versioning!");
 });
 
+app.get("/hello", (c) => {
+  return c.text("Hello Standard Versioning!");
+});
+
 serve(
   {
     fetch: app.fetch,
