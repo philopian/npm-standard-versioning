@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/philopian/npm-standard-versioning/compare/v0.4.0...v0.5.0) (2025-04-13)
+
+
+### Bug Fixes
+
+* remove unnecessary blank lines in README.md ([58d1bc8](https://github.com/philopian/npm-standard-versioning/commit/58d1bc86e8364845904ca47f392f6d491ce31ccb))
+* update release event types in publish workflow ([493d8b0](https://github.com/philopian/npm-standard-versioning/commit/493d8b09f9f82601804722cc57877854c66a4997))
+
 ## [0.4.0](https://github.com/philopian/npm-standard-versioning/compare/v0.3.0...v0.4.0) (2025-04-13)
 
 
