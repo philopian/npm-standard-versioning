@@ -29,7 +29,7 @@ jobs:
           git config --local user.name "GitHub Action"
       
       - name: Get release type from labels
-        id: get-release-type
+        id: release-type
         run: |
           RELEASE_TYPE="patch"  # Default
           if ${{ contains(github.event.pull_request.labels.*.name, 'major') }}; then
@@ -37,20 +37,44 @@ jobs:
           elif ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}; then
             RELEASE_TYPE="minor"
           fi
-          echo "RELEASE_TYPE=$RELEASE_TYPE" >> $GITHUB_ENV
-          echo "::set-output name=release_type::$RELEASE_TYPE"
+          echo "RELEASE_TYPE=${RELEASE_TYPE}" >> $GITHUB_OUTPUT
       
       - name: Release with standard-version
         run: |
-          npm run release -- --release-as ${{ env.RELEASE_TYPE }} --no-verify
+          npm run release -- --release-as ${{ steps.release-type.outputs.RELEASE_TYPE }} --no-verify
       
       - name: Get new version
-        id: get-version
+        id: version
         run: |
           NEW_VERSION=$(node -e "console.log(require('./package.json').version)")
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo "::set-output name=version::$NEW_VERSION"
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
+      
+      - name: Extract changelog for the current version
+        id: changelog
+        run: |
+          VERSION=${{ steps.version.outputs.NEW_VERSION }}
+          # Extract the content between the current version header and the next version header
+          CHANGELOG_CONTENT=$(awk -v version="## \\[$VERSION\\]" 'BEGIN {print_line=0} $0 ~ version {print_line=1; next} $0 ~ /^## / {if(print_line==1) {print_line=0}} print_line' CHANGELOG.md)
+          # Escape newlines for GitHub Actions
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//'%'/'%25'}"
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\n'/'%0A'}"
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\r'/'%0D'}"
+          echo "CONTENT<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       
       - name: Push changes
         run: |
           git push --follow-tags origin main
+      
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.version.outputs.NEW_VERSION }}
+          release_name: Release v${{ steps.version.outputs.NEW_VERSION }}
+          body: ${{ steps.changelog.outputs.CONTENT }}
+          draft: false
+          prerelease: false
