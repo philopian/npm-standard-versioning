@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/philopian/npm-standard-versioning/compare/v0.1.0...v0.2.0) (2025-04-13)
+
+
+### Bug Fixes
+
+* update release workflow to use outputs for version and release type ([f817e1e](https://github.com/philopian/npm-standard-versioning/commit/f817e1e7283609782517e722ee19587892b41124))
+
 ## [0.1.0](https://github.com/philopian/npm-standard-versioning/compare/v0.0.4...v0.1.0) (2025-04-13)
 
 
