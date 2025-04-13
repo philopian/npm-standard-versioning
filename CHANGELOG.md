@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/philopian/npm-standard-versioning/compare/v0.3.0...v0.4.0) (2025-04-13)
+
+
+### Features
+
+* add /hello route to respond with greeting ([95e2a02](https://github.com/philopian/npm-standard-versioning/commit/95e2a02ab72ebbb80d0225dee7c2c4f7b7099ac9))
+
+
+### Bug Fixes
+
+* correct response for /something route ([619e996](https://github.com/philopian/npm-standard-versioning/commit/619e996a40c1631b05c2a778f71ac82e6515f466))
+* update the /hello response ([fb64ac2](https://github.com/philopian/npm-standard-versioning/commit/fb64ac28e73bae93a3a353bfd22dc930aaa72e4d))
+
 ## [0.3.0](https://github.com/philopian/npm-standard-versioning/compare/v0.2.4...v0.3.0) (2025-04-13)
 
 
