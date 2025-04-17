@@ -4,7 +4,7 @@ import { Hono } from "hono";
 const app = new Hono();
 
 app.get("/", (c) => {
-  return c.text("Hello Standard Versioning!");
+  return c.text("Hello Standard Versioning! 01");
 });
 
 app.get("/hello", (c) => {
