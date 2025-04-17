@@ -1,6 +1,6 @@
 {
   "name": "npm-standard-versioning",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "description": "Messing around with npm package standard-version",
   "license": "ISC",

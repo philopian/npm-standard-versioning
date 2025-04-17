@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.3](https://github.com/philopian/npm-standard-versioning/compare/v0.5.2...v0.5.3) (2025-04-17)
+
+
+### Features
+
+* update root endpoint to return JSON response with greeting message ([#14](https://github.com/philopian/npm-standard-versioning/issues/14)) ([0cc0d13](https://github.com/philopian/npm-standard-versioning/commit/0cc0d132205ae67ae536e39355f5684796397581))
+
+
+### Bug Fixes
+
+* update greeting message to include version number ([fa7400d](https://github.com/philopian/npm-standard-versioning/commit/fa7400dec9bd9c3bb59a8aa8a9797ac2913aa763))
+
 ### [0.5.2](https://github.com/philopian/npm-standard-versioning/compare/v0.5.1...v0.5.2) (2025-04-13)
 
 
