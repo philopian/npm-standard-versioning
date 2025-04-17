@@ -4,15 +4,9 @@ import { Hono } from "hono";
 const app = new Hono();
 
 app.get("/", (c) => {
-  return c.text("Hello Standard Versioning! 01");
-});
-
-app.get("/hello", (c) => {
-  return c.text("Hello!");
-});
-
-app.get("/something", (c) => {
-  return c.text("somthing!");
+  return c.json({
+    message: "Hello, 01",
+  });
 });
 
 serve(
